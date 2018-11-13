@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <task:annotation-driven/>
+
+    <!--供应商定时任务  半个小时一次  -->
+    <task:scheduled-tasks>
+    <task:scheduled ref="supplierTask" method="sendSupplierInfoToCrm" cron="0/10 * * * * ?"/>
+    </task:scheduled-tasks>
+
+    <!--错误机制定时任务 两个小时一次 -->
+    <!--<task:scheduled-tasks>-->
+    <!--<task:scheduled ref="errorTask" method="errorTask" cron="0/10 * * * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
+
+    <!--订单定时任务一次 -->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="orderTask" method="orderTask" cron="0/10 * * * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
+
+    <!--发货信息同步 -->
+    <!--<task:scheduled-tasks>-->
+    <!--<task:scheduled ref="delivery" method="getDeliveryInfoFromERPToCRM" cron="0/10 * * * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
+
+    <!--订单状态信息同步 -->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="orderStatusTask" method="orderStatus" cron="0/10 * * * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
+
+    <!--订单状态信息同步 -->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="paymentTask" method="getPayment" cron="0/10 * * * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
+
+</beans>

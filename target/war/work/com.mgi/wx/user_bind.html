@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>绑定用户</title>
+    <link rel="stylesheet" href="css/weui.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h2 class="txt_center">绑定用户</h2></header>
+<main>
+    <form>
+        <div class="weui-cells weui-cells_form" id="form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">工单编号</label></div>
+                <div class="weui-cell__bd">
+                    <span class="sn-txt">SN-</span>
+                    <input id="txtSN" requiredNin1="#txtSN,#txtCustomerName" class="weui-input sn-input" type="text"
+                           pattern="^\d{8,12}$" placeholder="请输入工单编号" emptyTips="工单编号和客户名称须填写一项"
+                           notMatchTips="请输入正确的工单编号">
+                </div>
+                <div class="weui-cell__ft"><i></i></div>
+            </div>
+            <div class="weui-cell weui-cell_form">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">客户名称</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input id="txtCustomerName" requiredNin1="#txtSN,#txtCustomerName" class="weui-input" type="text"
+                           placeholder="请输入客户名称" emptyTips="工单编号和客户名称须填写一项">
+                </div>
+                <div class="weui-cell__ft"><i></i></div>
+            </div>
+            <div class="weui-cell weui-cell_form">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">联系人姓名</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input id="txtContact" class="weui-input" type="text" placeholder="请输入联系人姓名" emptyTips="请填写联系人姓名" required>
+                </div>
+                <div class="weui-cell__ft"><i></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">电话</label></div>
+                <div class="weui-cell__bd">
+                    <input id="txtTel" class="weui-input" type="tel" pattern="^[\d\-\ \(\)]{7,11}$" placeholder="输入你现在的电话号码" emptytips="请输入电话号码"
+                           notmatchtips="请输入正确的电话号码"></div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell weui-cell_form">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">邮件地址</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input id="txtEmail" class="weui-input" pattern="^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$" type="email" notmatchtips="请输入正确的邮件地址"
+                           placeholder="请输入邮件地址">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell weui-cell_form">
+                <div class="weui-cell__hd address">
+                    <label class="weui-label">联系人地址</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <textarea id="txtAddress" class="weui-textarea" type="text" placeholder="请输入联系人地址" contenteditable="true"
+                              rows="3"></textarea>
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+        </div>
+        <input type="hidden" id="txtOpenID" value="">
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" id="btnSubmit">确定</a>
+        </div>
+    </form>
+</main>
+</body>
+<script src="js/lib/jquery-3.3.1.min.js"></script>
+<script src="js/lib/weui.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/page/user_bind.js"></script>
+</html>

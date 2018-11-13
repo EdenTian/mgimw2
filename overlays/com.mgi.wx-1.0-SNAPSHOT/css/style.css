@@ -1,0 +1,61 @@
+body {
+    background: #fafafa
+}
+
+header {
+    padding: 3rem 0 2rem 0;
+}
+
+.txt_center {
+    text-align: center;
+}
+
+.sn-txt {
+    color: darkgray;
+    position: absolute;
+}
+
+.sn-input {
+    padding-left: 2rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.address {
+    align-self: flex-start
+}
+
+.success {
+    padding: 2rem;
+}
+
+.success > section .msg_title {
+    text-align: center;
+    padding: 1rem;
+    /*color: #029ae4;*/
+}
+
+.success > section .msg_title > span {
+    display: block;
+    font-size: 7rem;
+    box-sizing: border-box;
+    -webkit-border-radius: 5.5rem;
+    -moz-border-radius: 5.5rem;
+    border-radius: 5.5rem;
+    margin: 1rem auto;
+}
+
+.success > section .msg_title > p {
+}
+
+.success > section .msg_content {
+    text-align:center;
+    margin-top: 2rem;
+}
+
+.success > section .msg_content > p {
+    /*font-size: 1.2rem;*/
+    text-align: center;
+    line-height: 1.5;
+}

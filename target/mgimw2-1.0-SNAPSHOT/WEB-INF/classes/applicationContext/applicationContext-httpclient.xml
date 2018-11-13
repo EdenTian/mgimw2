@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+    <!-- 配置连接管理器 -->
+    <bean id="connectionManager" class="org.apache.http.impl.conn.PoolingHttpClientConnectionManager">
+        <!-- 设置最大连接数 -->
+        <property name="maxTotal" value="${httpclient.maxTotal}"/>
+        <!-- 设置每个主机地址的并发数 -->
+        <property name="defaultMaxPerRoute" value="${httpclient.defaultMaxPerRoute}"/>
+    </bean>
+    <!-- 创建HttpClientBuilder对象 -->
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder">
+        <!-- 设置连接管理器 -->
+        <property name="connectionManager" ref="connectionManager"/>
+    </bean>
+
+    <!-- 配置httpclient -->
+    <bean id="httpclient" class="org.apache.http.impl.client.CloseableHttpClient"
+          factory-bean="httpClientBuilder" factory-method="build" scope="prototype">
+    </bean>
+    <!-- 创建requestConfigBuilder对象 -->
+    <bean id="requestConfigBuilder" class="org.apache.http.client.config.RequestConfig.Builder">
+        <!-- 创建连接的最长时间 -->
+        <property name="connectTimeout" value="${httpclient.connectTimeout}"/>
+        <!-- 从连接池中获取到连接的最长时间 -->
+        <property name="connectionRequestTimeout" value="${httpclient.connectionRequestTimeout}"/>
+        <!-- 数据传输的最长时间 -->
+        <property name="socketTimeout" value="${httpclient.socketTimeout}"/>
+        <!-- 提交请求前测试连接是否可用 -->
+        <property name="staleConnectionCheckEnabled" value="${httpclient.staleConnectionCheckEnabled}"/>
+    </bean>
+
+    <!-- 请求参数配置信息 -->
+    <bean id="requestConfig" class="org.apache.http.client.config.RequestConfig"
+          factory-bean="requestConfigBuilder" factory-method="build"></bean>
+
+    <!-- 使用线程清理无效连接 -->
+    <bean id="idleConnectionEvictor" class="com.mgi.util.IdleConnectionEvictor" destroy-method="shutdown">
+        <constructor-arg index="0" ref="connectionManager"/>
+    </bean>
+</beans>

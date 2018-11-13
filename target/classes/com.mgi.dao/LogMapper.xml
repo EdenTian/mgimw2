@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mgi.dao.LogMapper">
+    <insert id="insertLog"  parameterType="com.mgi.bean.MgiLog">
+INSERT INTO demo.log (task_name, task_desc, task_status,task_date,task_content)
+	VALUES('${log.taskName}','${log.taskDesc}','${log.taskStatus}','${log.taskDate}','${log.taskContent}')
+  </insert>
+    <resultMap id="map" type="com.mgi.bean.MgiLog">
+        <id property="logId" column="log_id" ></id>
+        <result property="tastName" column="task_name"></result>
+        <result property="taskDesc" column="task_desc"></result>
+        <result property="taskStatus" column="task_status"></result>
+        <result property="taskDate" column="task_date"></result>
+        <result property="taskContent" column="task_content"></result>
+
+    </resultMap>
+    <select id="selectLogIntime"  resultType="com.mgi.bean.MgiLog" parameterType="java.lang.String">
+        select * from log where task_date between '${date} 00:00:00'  and '${date} 23:59:59'
+
+    </select>
+</mapper>

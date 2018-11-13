@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <context:component-scan base-package="com.mgi">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!-- 加载外部资源配置文件 -->
+    <context:property-placeholder location="classpath:properties/*.properties"/>
+
+
+    <bean id="pooledDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="url" value="${jdbc.oracle.jdbcUrl}"/>
+        <property name="username" value="${jdbc.oracle.user}"/>
+        <property name="password" value="${jdbc.oracle.password}"/>
+        <property name="driverClassName" value="${jdbc.oracle.driverClass}"/>
+        <!-- 最大并发连接数 -->
+        <property name="maxActive" value="100"/>
+        <!-- 初始化连接数量 -->
+        <property name="initialSize" value="30"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000"/>
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="20"/>
+    </bean>
+    <bean id="mysqlDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <!-- 数据库基本信息配置 -->
+        <property name="url" value="${jdbc.mysql.jdbcUrl}"/>
+        <property name="username" value="${jdbc.mysql.user}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
+        <property name="driverClassName" value="${jdbc.mysql.driverClass}"/>
+
+        <!--<property name="numTestsPerEvictionRun" value="3" />-->
+        <property name="maxWait" value="1800000"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="validationQuery" value="SELECT 1" />
+    </bean>
+
+    <!-- 定义数据源，使用自己实现的数据源 -->
+    <bean id="dataSource" class="com.mgi.dydatasource.DynamicDataSource">
+        <!-- 设置多个数据源 -->
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <!-- 这个key需要和程序中的key一致 -->
+                <entry key="oracle" value-ref="pooledDataSource"/>
+                <entry key="mysql" value-ref="mysqlDataSource"/>
+            </map>
+        </property>
+        <!-- 设置默认的数据源，这里默认走Oracle -->
+        <property name="defaultTargetDataSource" ref="pooledDataSource"/>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 定义事务策略 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!--定义查询方法都是只读的 -->
+            <!--<tx:method name="log*"  propagation="REQUIRED"  />-->
+            <tx:method name="log*" propagation="REQUIRED"/>
+            <!-- 主库执行操作，事务传播行为定义为默认行为 -->
+            <tx:method name="get*" propagation="REQUIRED"></tx:method>
+
+            <!--其他方法使用默认事务策略 -->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+    <!-- 定义AOP切面处理器 -->
+    <bean class="com.mgi.dydatasource.DataSourceAspect" id="dataSourceAspect"/>
+
+    <aop:config>
+        <!-- 定义切面，所有的service的所有方法 -->
+        <aop:pointcut id="txPointcut" expression="execution(* com.mgi.service.*.*(..))"/>
+        <!-- 应用事务策略到Service切面 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+
+        <!-- 将切面应用到自定义的切面处理器上，-9999保证该切面优先级最高执行 -->
+        <aop:aspect ref="dataSourceAspect" order="-9999">
+            <aop:before method="before" pointcut-ref="txPointcut"/>
+        </aop:aspect>
+    </aop:config>
+
+
+    <!--================== 配置和MyBatis的整合=============== -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定mybatis全局配置文件的位置 -->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+        <property name="dataSource" ref="dataSource"></property>
+        <!-- 指定mybatis，mapper文件的位置 -->
+        <property name="mapperLocations" value="classpath:com.mgi.dao/*Mapper.xml"></property>
+    </bean>
+
+    <!-- 配置扫描器，将mybatis接口的实现加入到ioc容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描所有dao接口的实现，加入到ioc容器中 -->
+        <property name="basePackage" value="com.mgi.dao"></property>
+    </bean>
+
+    <!-- 配置一个可以执行批量的sqlSession -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+    </bean>
+
+
+</beans>

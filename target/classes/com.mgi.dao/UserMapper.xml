@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mgi.dao.UserMapper">
+    <!--<select id="getProducts" resultType="com.mgi.erpbean.ErpProductMain">-->
+    <!--select item_code,item_desc_cn,item_desc_en,item_cate,item_art,pack_rule,uom,-->
+    <!--item_cost,serial_number_control_code,lot_control_code,organization_id,creation_date,last_update_date-->
+    <!--from apps.xxbgi_inv_assembly_items_v t where t.organization_id = 6958-->
+    <!--</select>-->
+
+    <select id="login" resultType="com.mgi.bean.User">
+        select u_id,u_name,u_password,u_state from  t_user where u_name = #{uName} and u_password = #{uPassword}
+  </select>
+</mapper>

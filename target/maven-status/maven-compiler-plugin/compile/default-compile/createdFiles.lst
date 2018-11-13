@@ -1,0 +1,6 @@
+com\mgi\service\OrderService.class
+com\mgi\service\impl\OrderServiceImpl.class
+com\mgi\bean\Order.class
+com\mgi\interceptor\TaskInteceptor.class
+com\mgi\dao\OrderMapper.class
+com\mgi\quarts\OrderTask.class
