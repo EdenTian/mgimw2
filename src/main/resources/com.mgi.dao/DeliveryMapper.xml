@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mgi.dao.DeliveryMapper">
+
+    <select id="getInfoInTime" resultType="com.mgi.bean.delivery.DeliveryInfoInput">
+--         select VENDOR_NUMBER as SupplierNum, VENDOR_NAME as SupplierName from apps.xxbgi_ap_vendors_tocrm_v v
+--         where to_char(v.creation_date,'yyyy-mm-dd hh24:mi:ss') between #{strDate}and #{endDate}
+  </select>
+
+    <!--List<SupplyInfo> getSupplierInfoByIds(ArrayList<String> supplierIds);-->
+    <select id="getInfoByIds" resultType="com.mgi.bean.delivery.DeliveryInfoInput">
+        <!--select VENDOR_NUMBER as SupplierNum, VENDOR_NAME as SupplierName from apps.xxbgi_ap_vendors_tocrm_v v-->
+        <!--where v.VENDOR_NUMBER in (-->
+        <!--<foreach collection="supplierIds" item="id" separator=",">-->
+            <!--#{id}-->
+        <!--</foreach>-->
+        <!--)-->
+    </select>
+</mapper>
